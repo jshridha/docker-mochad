@@ -1,3 +1,3 @@
 #!/bin/bash
 
-tail -F /var/log/mochad.log -F /var/log/mochad.err
+tail -F /var/log/mochad.log
