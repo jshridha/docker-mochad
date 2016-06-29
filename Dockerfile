@@ -1,25 +1,13 @@
-FROM phusion/baseimage
+FROM alpine
+MAINTAINER Jay Shridharani <jshridha@gmail.com>
 
-RUN \
-  apt-get update && \
-  apt-get install -y cmake apt-utils build-essential && \
-  apt-get install -y libusb-1.0-0-dev supervisor && \
-  apt-get clean -y && \
-  rm -rf /usr/share/locale/* && \
-  rm -rf /usr/share/man/* && \
-  rm -rf /tmp/*
+RUN apk add --update --no-cache gcc g++ cmake make wget libusb-dev && \
+      mkdir /build && cd /build && \
+      wget -O mochad.tgz http://sourceforge.net/projects/mochad/files/latest/download && \
+      tar -xzvf mochad*.t* && \
+      cd mochad* && ./configure && make && make install && \
+      apk --purge del gcc g++ cmake make wget && \
+      rm -rf /var/cache/apk/* /lib/apk/db/*
 
+CMD ["mochad", "-d"]
 
-# Define working directory.
-WORKDIR /root
-
-ADD mochad-0.1.16.tar.gz /root/
-  
-RUN \
-  cd mochad-0.1.16 && ./configure && make && make install && rm -rf /root/*
-
-ADD *.conf /etc/supervisor/conf.d/
-
-ADD services/ /etc/service/
-#RUN chmod -v +x /etc/service/*/run /etc/service/*/finish /etc/my_init.d/*.sh
-RUN chmod -v +x /etc/service/*/run
