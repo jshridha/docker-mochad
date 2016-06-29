@@ -23,5 +23,3 @@ ADD *.conf /etc/supervisor/conf.d/
 ADD services/ /etc/service/
 #RUN chmod -v +x /etc/service/*/run /etc/service/*/finish /etc/my_init.d/*.sh
 RUN chmod -v +x /etc/service/*/run
-
-CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf", "-n"]
